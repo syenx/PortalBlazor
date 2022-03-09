@@ -1,0 +1,51 @@
+﻿@inherits MonComponenteBase
+
+<MudCard Class="my-2">
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText Typo="Typo.h6">@Indicador.Nome</MudText>
+        </CardHeaderContent>
+    </MudCardHeader>
+    <MudCardContent>
+        <TabelaEsqueleto Dense="true" Labels="colunas" QtdLinhas="3" @ref="tabelaEsqueleto">
+        </TabelaEsqueleto>
+        <MudTable Items="lista" Dense="true" Elevation="0">
+            <HeaderContent>
+                @foreach (var coluna in colunas)
+                {
+                    <MudTh>@coluna</MudTh>
+                }
+            </HeaderContent>
+            <RowTemplate>
+                @foreach (var coluna in colunas)
+                {
+                    <MudTd DataLabel="@coluna">@context[coluna]</MudTd>
+                }
+            </RowTemplate>
+        </MudTable>
+    </MudCardContent>
+</MudCard>
+
+@code {
+
+    private List<string> colunas = new List<string>();
+    private IEnumerable<dynamic> lista = new List<object>();
+    private TabelaEsqueleto tabelaEsqueleto;
+
+    protected override Task TratarDado(IEnumerable<object> dados)
+    {
+        var primeiro = dados?.FirstOrDefault();
+        if (primeiro == null) return Task.CompletedTask;
+        var cols = primeiro.ObterNomePropriedades();
+        if (cols == null || !cols.Any()) return Task.CompletedTask;
+        colunas = cols.ToList();
+        lista = dados;
+        return Task.CompletedTask;
+    }
+
+    protected override void AtualizarLoading(bool carregando)
+    {
+        tabelaEsqueleto.AtualizarLoading(carregando);
+        base.AtualizarLoading(carregando);
+    }
+}

@@ -1,0 +1,9 @@
+﻿{
+  "routes": [
+    {
+      "route": "/*",
+      "serve": "/index.html",
+      "statuscode": 200
+    }
+  ]
+}

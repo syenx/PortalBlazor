@@ -1,0 +1,59 @@
+﻿@inherits MonComponenteBase
+
+<MudCard Class="my-2">
+    <MudCardHeader>
+        <CardHeaderContent>
+            <MudText Typo="Typo.h6">@Indicador.Nome</MudText>
+        </CardHeaderContent>
+    </MudCardHeader>
+    <MudCardContent>
+        <Pie Data="lista" Config="configuracao" @ref="pizza" />
+    </MudCardContent>
+</MudCard>
+
+@code {
+
+    string campoCor;
+    string campoAngulo;
+    Pie pizza;
+    PieConfig configuracao = new PieConfig
+    {
+        AngleField = "valor",
+        ColorField = "label",
+        Label = new PieLabelConfig
+        {
+            Type = "inner"
+        },
+        Legend = new Legend
+        {
+            Position = "bottom"
+        }
+    };
+    List<object> lista;
+
+    string[] templatesCampoCor = new string[] { "titulo", "label", "coluna", "legenda", "campo" };
+    string[] templatesCampoAngulo = new string[] { "valor", "total", "percentagem", "resultado", "numero", "quantidade", "qtd" };
+
+    protected override async Task TratarDado(IEnumerable<object> dados)
+    {
+        var primeiro = dados?.FirstOrDefault();
+        if (primeiro == null) return;
+        var cols = primeiro.ObterNomePropriedades();
+
+        campoCor = cols.FirstOrDefault(c => templatesCampoCor.Contains(c.ToLower()));
+        if (string.IsNullOrWhiteSpace(campoCor))
+            campoCor = cols.FirstOrDefault();
+
+        campoAngulo = cols.FirstOrDefault(c => templatesCampoAngulo.Contains(c.ToLower()));
+        if (string.IsNullOrWhiteSpace(campoAngulo))
+            campoAngulo = cols.Take(2).LastOrDefault();
+
+        var listaDicionarios = dados.Select(c => c.ParaDicionario());
+        var lista = new List<object>();
+        foreach (var dic in listaDicionarios)
+            lista.Add(new { label = dic[campoCor], valor = dic[campoAngulo] });
+
+        await pizza.UpdateChart(csData: lista);
+    }
+
+}

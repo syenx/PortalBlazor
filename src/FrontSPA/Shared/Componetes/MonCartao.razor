@@ -1,0 +1,40 @@
+﻿@inherits MonComponenteBase
+
+<MudCard Class="my-2">
+    <MudCardHeader>
+        <CardHeaderContent>
+            @if (carregando)
+            {
+                <MudSkeleton Width="200px" />
+            }
+            else
+            {
+                <MudText Typo="Typo.h6">@Indicador.Nome</MudText>
+            }
+        </CardHeaderContent>
+    </MudCardHeader>
+    <MudCardContent>
+        @if (carregando)
+        {
+            <MudSkeleton />
+        }
+        else
+        {
+            <MudText Align="Align.Center" Typo="Typo.h4">@dado</MudText>
+        }
+    </MudCardContent>
+</MudCard>
+
+@code {
+    private string dado;
+
+    protected override Task TratarDado(IEnumerable<object> dados)
+    {
+        var primeiro = dados.FirstOrDefault();
+        var nomes = primeiro.ObterNomePropriedades();
+        Dictionary<string, object> dic = primeiro.ParaDicionario();
+        var valor = dic.FirstOrDefault().Value;
+        dado = valor.ToString();
+        return Task.CompletedTask;
+    }
+}

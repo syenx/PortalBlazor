@@ -1,0 +1,41 @@
+﻿@inherits LayoutComponentBase
+
+@inject NavigationManager Navigation
+
+<div class="limiter">
+    <div class="container-login100" style="background-image: url('images/img-01.jpg');">
+        <div class="wrap-login100 p-t-190 p-b-30">
+            <form class="login100-form validate-form">
+
+                <div class="login100-form-avatar">
+                    <img src="Login/images/1200px-Btg-logo-blue.svg.png" alt="BTG PACTUAL">
+                </div>
+                <span class="login100-form-title p-t-20 p-b-45">
+
+                </span>
+                <span class="login100-form-title2">
+                    EDM * Data Monitor
+                </span>
+                <span class="login100-form-title p-t-20 p-b-45">
+
+                </span>
+                <span class="login100-form-title p-t-20 p-b-45">
+                    Acessão Não Autorizado
+                </span>
+                <div class="container-login100-form-btn p-t-10">
+                    <button @onclick="Logar" class="login100-form-btn">
+                        Login
+                    </button>
+                </div>
+                @Body
+            </form>
+        </div>
+    </div>
+</div>
+
+@code{
+    private void Logar()
+    {
+        Navigation.NavigateTo("authentication/login");
+    }
+}

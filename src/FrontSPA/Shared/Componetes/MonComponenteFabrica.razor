@@ -1,0 +1,25 @@
+﻿<MudContainer Class="d-flex flex-column pa-4">
+
+    @foreach (var indicador in Indicadores)
+    {
+        switch (indicador.Tipo)
+        {
+            case Enums.TipoUI.Texto:
+                <MonCartao Indicador="indicador" />
+                break;
+            case Enums.TipoUI.Tabela:
+                <MonTabela Indicador="indicador" />
+                break;
+            case Enums.TipoUI.GraficoPizza:
+                <MonGraficoPizza Indicador="indicador" />
+                break;
+            default:
+                break;
+        }
+    }
+
+</MudContainer>
+
+@code {
+    [Parameter] public List<IndicadorVO> Indicadores { get; set; } = new List<IndicadorVO>();
+}

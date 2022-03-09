@@ -1,0 +1,29 @@
+﻿@page "/"
+
+@inject HttpClient httpClient
+
+@attribute [Authorize]
+
+<MonComponenteFabrica Indicadores="indicadores" />
+
+@code {
+    [CascadingParameter] public ErroComponente Error { get; set; }
+    [CascadingParameter] public GerenciadorLoading Loading { get; set; }
+
+    List<IndicadorVO> indicadores = new List<IndicadorVO>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            indicadores = await httpClient.GetAsync<List<IndicadorVO>>($"/Dashboard", atualizaLoading: Loading.AtualizarLoading);
+        }
+        catch (Exception ex)
+        {
+            Loading.AtualizarLoading(false);
+            Error.ProcessarErro(ex);
+        }
+
+        await base.OnInitializedAsync();
+    }
+}
